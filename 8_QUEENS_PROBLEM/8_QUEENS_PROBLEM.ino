@@ -27,7 +27,7 @@ bool is_safe(int row,int col);
 // Maximun of matrix that the system will control
 #define matrix_Num 1
 #define N 8
-#define t 100
+#define t 60
 
 /* --------------------------------------------------------------------------
      * Create a new controler
@@ -92,6 +92,7 @@ void loop() {
    solve_NQueens();
    permisson = false;
   }
+  // LLEGA A LA SOLUCION #3
        
 }
 
@@ -198,6 +199,17 @@ bool solve_aux(int col){
     return false;
 }
 
+void show_Collition(int row1,int col1,int row2,int col2){
+  for(int a = 0; a<5;a++){
+    led_matrix.setLed(0,row1,col1,true);
+    led_matrix.setLed(0,row2,col2,true);
+    delay(60);
+    led_matrix.setLed(0,row1,col1,false);
+    led_matrix.setLed(0,row2,col2,false);
+    delay(60);              
+  }
+}
+
 // Indicates if a queen on i,j position is in danger or not
 bool is_safe(int row, int col){
      
@@ -206,50 +218,25 @@ bool is_safe(int row, int col){
     /* Check this row on left side */
     for (i = 0; i < col; i++){ 
         if (board[row][i]){ 
-            for(int a = 0; a<5;a++){
-              led_matrix.setLed(0,row,i,true);
-              led_matrix.setLed(0,row,col,true);
-              delay(100);
-              led_matrix.setLed(0,row,col,false);
-              led_matrix.setLed(0,row,i,false);
-              delay(100);
-              
-            }
-            return false; 
-        }
-    }
+          show_Collition(row,col,row,i);
+          return false;}} 
+        
   
     /* Check upper diagonal on left side */
     for (i=row, j=col; i>=0 && j>=0; i--, j--){ 
-        if (board[i][j]){ 
-          
-          for(int a = 0; a<5;a++){
-              led_matrix.setLed(0,i,j,true);
-              led_matrix.setLed(0,row,col,true);
-              delay(100);
-              led_matrix.setLed(0,row,col,false);
-              led_matrix.setLed(0,i,j,false);
-              delay(100);
-            }
-            return false;
-        } 
-    }
+        if (board[i][j]){
+          show_Collition(row,col,i,j);
+          return false;}}
+         
+    
   
     /* Check lower diagonal on left side */
     for (i=row, j=col; j>=0 && i<N; i++, j--){ 
         if (board[i][j]){
-          
-            for(int a = 0; a<5;a++){
-              led_matrix.setLed(0,i,j,true);
-              led_matrix.setLed(0,row,col,true);
-              delay(100);
-              led_matrix.setLed(0,row,col,false);
-              led_matrix.setLed(0,i,j,false);
-              delay(100);
-            }
-            return false;
-        } 
+          show_Collition(row,col,i,j);
+          return false;}}
+         
   
-        return true; 
-  }
+   return true; 
+  
 }
